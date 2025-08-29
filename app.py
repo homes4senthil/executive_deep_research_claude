@@ -12,15 +12,18 @@ from executive_generator import ExecutiveReportGenerator
 # Load environment variables
 load_dotenv()
 
+# Fixed company configuration
+COMPANY_NAME = "Apple Inc."
+
 def main():
     st.set_page_config(
-        page_title="Executive Deep Research",
-        page_icon="📊",
+        page_title="Apple Executive Research",
+        page_icon="🍎",
         layout="wide"
     )
     
-    st.title("📊 Executive Deep Research Assistant")
-    st.markdown("Generate comprehensive executive reports with sales data analysis and industry research")
+    st.title("🍎 Apple Executive Research Assistant")
+    st.markdown("Generate comprehensive Apple executive reports with sales data analysis and industry research")
     
     # Create two columns
     col1, col2 = st.columns([1, 2])
@@ -28,9 +31,9 @@ def main():
     with col1:
         st.header("Input Parameters")
         
-        # Company Information
-        st.subheader("Company Details")
-        company_name = st.text_input("Company Name", placeholder="e.g., Apple Inc.")
+        # Display company info
+        st.subheader("Company")
+        st.info(f"🍎 {COMPANY_NAME}")
         
         executive_roles = [
             "CEO", "CFO", "COO", "CTO", "CMO", 
@@ -84,10 +87,6 @@ def main():
         
         if generate_button:
             # Validate inputs
-            if not company_name:
-                st.error("Please enter a company name")
-                return
-            
             if not openai_key:
                 st.error("Please provide OpenAI API key")
                 return
@@ -113,7 +112,7 @@ def main():
                     sales_data = data_processor.process_csv_data(csv_path)
                     
                     # Display sales summary
-                    display_sales_summary(sales_data, company_name)
+                    display_sales_summary(sales_data, COMPANY_NAME)
                     
                     # Industry research (optional)
                     industry_research = None
@@ -122,7 +121,7 @@ def main():
                         try:
                             search_tool = TavilySearchTool(api_key=tavily_key)
                             products = list(sales_data.product_summary.keys())
-                            industry_research = search_tool.search_company_trends(company_name, products)
+                            industry_research = search_tool.search_company_trends(COMPANY_NAME, products)
                             st.success("Industry research completed!")
                         except Exception as e:
                             st.warning(f"Industry research failed: {str(e)}")
@@ -143,7 +142,7 @@ def main():
                         )
                     
                     executive_report = report_generator.generate_executive_report(
-                        company_name,
+                        COMPANY_NAME,
                         executive_role,
                         sales_data,
                         industry_research

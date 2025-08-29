@@ -6,6 +6,9 @@ from typing import List, Dict, Any
 from data_processor import SalesData, create_data_summary_prompt
 from search_tool import IndustryResearch, create_industry_research_prompt
 
+# Fixed company configuration
+COMPANY_NAME = "Apple Inc."
+
 class ExecutiveRecommendation(BaseModel):
     category: str
     recommendation: str
@@ -34,15 +37,17 @@ class ExecutiveReportGenerator:
     
     def generate_executive_report(
         self, 
-        company_name: str, 
-        executive_role: str,
-        sales_data: SalesData, 
-        industry_research: IndustryResearch
+        company_name: str = None, 
+        executive_role: str = "CEO",
+        sales_data: SalesData = None, 
+        industry_research: IndustryResearch = None
     ) -> ExecutiveSummary:
         """
         Generate comprehensive executive report with summary and recommendations
         """
-        
+        if company_name is None:
+            company_name = COMPANY_NAME
+            
         # Create data summary
         data_summary = create_data_summary_prompt(sales_data, company_name)
         

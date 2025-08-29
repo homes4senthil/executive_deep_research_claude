@@ -3,6 +3,9 @@ from tavily import TavilyClient
 from typing import List, Dict, Any
 from pydantic import BaseModel
 
+# Fixed company configuration
+COMPANY_NAME = "Apple Inc."
+
 class SearchResult(BaseModel):
     title: str
     url: str
@@ -22,10 +25,15 @@ class TavilySearchTool:
             raise ValueError("Tavily API key is required. Set TAVILY_API_KEY environment variable.")
         self.client = TavilyClient(api_key=self.api_key)
     
-    def search_company_trends(self, company_name: str, products: List[str]) -> IndustryResearch:
+    def search_company_trends(self, company_name: str = None, products: List[str] = None) -> IndustryResearch:
         """
         Comprehensive search for company and industry trends
         """
+        if company_name is None:
+            company_name = COMPANY_NAME
+        if products is None:
+            products = []
+            
         try:
             # Search for company-specific trends
             company_query = f"{company_name} latest news trends 2024 2025 business strategy"
@@ -86,9 +94,11 @@ class TavilySearchTool:
             print(f"Search error for query '{query}': {str(e)}")
             return []
 
-def create_industry_research_prompt(research: IndustryResearch, company_name: str) -> str:
+def create_industry_research_prompt(research: IndustryResearch, company_name: str = None) -> str:
     """Create a formatted prompt with industry research findings"""
-    
+    if company_name is None:
+        company_name = COMPANY_NAME
+        
     prompt = f"""
 Industry Research Summary for {company_name}:
 

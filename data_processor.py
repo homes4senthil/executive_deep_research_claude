@@ -2,6 +2,9 @@ import pandas as pd
 from typing import Dict, Any, List
 from pydantic import BaseModel
 
+# Fixed company configuration
+COMPANY_NAME = "Apple Inc."
+
 class SalesData(BaseModel):
     product_summary: Dict[str, Any]
     region_summary: Dict[str, Any]
@@ -137,8 +140,10 @@ class DataProcessor:
         
         return insights
 
-def create_data_summary_prompt(sales_data: SalesData, company_name: str) -> str:
+def create_data_summary_prompt(sales_data: SalesData, company_name: str = None) -> str:
     """Create a formatted prompt with sales data summary"""
+    if company_name is None:
+        company_name = COMPANY_NAME
     prompt = f"""
 Sales Data Summary for {company_name}:
 
